@@ -1,0 +1,109 @@
+﻿:root {
+    --primary-color: rgba( 0, 123, 255,1);
+    --white: rgb(255 255 255)
+}
+
+body {
+    padding: 0px !important;
+    margin: 0px !important;
+    font-family: "Lato", sans-serif;
+    box-sizing: border-box !important;
+}
+
+.logo-text {
+    padding: 5px 10px;
+    /*   position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 999;
+    background-color: var(--white);
+    width: 100%;*/
+}
+
+    .logo-text .logo {
+        left: 0px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+    }
+
+.logo-img {
+    width: 60px;
+    height: 47px;
+    background-repeat: no-repeat;
+    float: left;
+    background-image: url("../image/logo_vbdlis_dark.png")
+}
+
+.logo-title {
+    font-size: 20px;
+}
+
+#containerMap {
+    height: 93.5vh;
+    width: auto;
+}
+
+    #containerMap div:nth-last-child(-n+2), #containerMap div:last-child {
+        display: none;
+    }
+
+.sidebar div {
+    display: block !important;
+}
+
+.sidebar {
+    height: 90%;
+    width: 0;
+    position: fixed;
+    overflow: hidden;
+    top: 60px;
+    left: 0;
+    z-index: 201;
+    background-color: var(--white);
+}
+
+
+    .sidebar .closebtn {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+.active {
+    padding: 15px 15px 0 0;
+    width: auto;
+    background-color: var(--white);
+}
+
+.openbtn {
+    font-size: 16px;
+    cursor: pointer;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    color: rgb(59 133 148 / 70%);
+}
+
+    .openbtn:hover i {
+        color: #167495;
+    }
+
+#main {
+    transition: margin-left .5s;
+    padding: 16px;
+    position: absolute;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+}
+
+@media screen and (max-height: 450px) {
+    .sidebar {
+        padding-top: 15px;
+    }
+
+        .sidebar a {
+            font-size: 18px;
+        }
+}

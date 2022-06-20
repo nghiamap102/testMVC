@@ -1,0 +1,81 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div id="containerMap">
+    @*<div id="mySidebarLayer" class="sidebar">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+            <a href="#">About</a>
+            <a href="#">Services</a>
+            <a href="#">Clients</a>
+            <a href="#">Contact</a>
+        </div>*@
+    <div id="mySidebarSearch" class="sidebar">
+        <div>
+            <h5>Thông tin tìm kiếm</h5>
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+        </div>
+        <div class="">
+            <div>
+                <i class="fa-solid fa-magnifying-glass"></i>
+                Tra cứu thửa đất
+            </div>
+            <div class="">
+                <input type="text" class="form-control" />
+                <input type="text" class="form-control" />
+                <select title="Quận/Huyện">
+                    <option value="tanphu">Tân Phú</option>
+                </select>
+                <select title="Phường/Xã">
+                    <option value="tanphu">Tân Phú</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div id="main">
+        <button class="openbtn btn" onclick="toggleLayer()" id="openbtn">
+            <i class="fa-solid fa-layer-group" id="layer"></i>
+        </button>
+        <button class="openbtn btn" onclick="toggleSearch()" id="openbtn">
+            <i class="fa-solid fa-magnifying-glass" id="search"></i>
+        </button>
+    </div>
+</div>
+
+<script>
+    var initialize = function () {
+        var mapContainer = document.getElementById("containerMap");
+        var mapProp = {
+            center: new vbd.LatLng(14.102783, 109.649506),
+            zoom: 5,
+            minZoom: 2,
+
+        };
+
+        var map = new vbd.Map(mapContainer, mapProp);
+    };
+
+    vbd.event.addDomListener(window, 'load', initialize);
+</script>
+<script>
+
+    var flag = false;
+
+    const toggleSearch = () => {
+        flag = !flag;
+        flag ? openNav() : closeNav();
+    }
+
+    function openNav() {
+        $("#mySidebarSearch").addClass("active")
+        document.getElementById("main").style.marginLeft = "250px";
+        flag = true;
+    }
+
+    function closeNav() {
+        $("#mySidebarSearch").removeClass("active")
+        document.getElementById("main").style.marginLeft = "0";
+        flag = false;
+    }
+</script>

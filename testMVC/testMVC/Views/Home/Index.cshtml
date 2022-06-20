@@ -11,25 +11,40 @@
             <a href="#">Contact</a>
         </div>*@
     <div id="mySidebarSearch" class="sidebar">
-        <div>
+        <div class="heading">
             <h5>Thông tin tìm kiếm</h5>
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
         </div>
-        <div class="">
+        <div class="body">
             <div>
                 <i class="fa-solid fa-magnifying-glass"></i>
                 Tra cứu thửa đất
             </div>
-            <div class="">
+            <form class="searchForm" id="searchForm">
+                <div class="form-group">
+                    <input type="text" class="form-control" />
+                </div>
+                <div class="form-group">
+
                 <input type="text" class="form-control" />
-                <input type="text" class="form-control" />
-                <select title="Quận/Huyện">
-                    <option value="tanphu">Tân Phú</option>
-                </select>
+                </div>
+
+                <div class="form-group">
+
                 <select title="Phường/Xã">
                     <option value="tanphu">Tân Phú</option>
                 </select>
-            </div>
+                </div>
+                <div class="form-group">
+                <select title="Quận/Huyện">
+                    <option value="tanphu">Tân Phú</option>
+                </select>
+
+                </div>
+                <div>
+                    <button class="btn btn-primary">Search</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -68,27 +83,16 @@
     }
 
     function openNav() {
-        $("#mySidebarSearch").addClass("active")
-        document.getElementById("main").style.marginLeft = "250px";
+        $("#mySidebarSearch").addClass("activeSidebar")
+        $("#main").addClass("activeMain")
+
         flag = true;
     }
 
     function closeNav() {
-        $("#mySidebarSearch").removeClass("active")
-        document.getElementById("main").style.marginLeft = "0";
+        $("#mySidebarSearch").removeClass("activeSidebar")
+        $("#main").removeClass("activeMain")
         flag = false;
     }
 
-    $("#form1").submit(function () {
-        var jqxhr = $.post('api/updates/complex', $('#form1').serialize())
-            .success(function () {
-                var loc = jqxhr.getResponseHeader('Location');
-                var a = $('<a/>', { href: loc, text: loc });
-                $('#message').html(a);
-            })
-            .error(function () {
-                $('#message').html("Error posting the update.");
-            });
-        return false;
-    });
 </script>

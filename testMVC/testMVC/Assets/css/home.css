@@ -9,7 +9,7 @@ body {
     font-family: "Lato", sans-serif;
     box-sizing: border-box !important;
 }
-
+/*------------logo-------------*/
 .logo-text {
     padding: 5px 10px;
     /*   position: fixed;
@@ -38,18 +38,18 @@ body {
 .logo-title {
     font-size: 20px;
 }
-
+/*-----------------------------map---------------*/
 #containerMap {
     height: 93.5vh;
     width: auto;
 }
 
-    #containerMap div:nth-last-child(-n+2), #containerMap div:last-child {
-        display: none;
+     #containerMap div:last-child {
+        /*display: none;*/
     }
 
 .sidebar div {
-    display: block !important;
+    /*display: block !important;*/
 }
 
 .sidebar {
@@ -70,14 +70,21 @@ body {
         right: 0;
     }
 
-.active {
+.activeSidebar {
     padding: 15px 15px 0 0;
-    width: auto;
     background-color: var(--white);
+    animation : toRight .5s both;
 }
-.inactive{
 
+@keyframes toRight{
+    0% {
+        width : 100px;
+    }
+    100% {
+        width: 350px;
+    }
 }
+
 .openbtn {
     font-size: 16px;
     cursor: pointer;
@@ -99,6 +106,19 @@ body {
     display: flex;
     flex-direction: column;
 }
+.activeMain {
+    animation: toRightMain 0.5s both;
+}
+
+@keyframes toRightMain {
+    0% {
+        margin-left: 0px;
+    }
+
+    100% {
+        margin-left: 350px;
+    }
+}
 
 @media screen and (max-height: 450px) {
     .sidebar {
@@ -108,4 +128,22 @@ body {
         .sidebar a {
             font-size: 18px;
         }
+}
+
+/*--------------sidebar-content------------*/
+.heading {
+   text-align : center;
+    position:relative;
+}
+.body{
+    display:flex; 
+    align-items:inherit;
+    flex-direction : column;
+}
+
+.searchForm{
+    display : flex; 
+    flex-direction : column;
+    align-items : center;
+    padding : 15px 0px;
 }

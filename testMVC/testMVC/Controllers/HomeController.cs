@@ -27,5 +27,13 @@ namespace testMVC.Controllers
 
             return View();
         }
+        [HttpPost]
+        [ActionName("Complex")]
+        public ActionResult GetData(int customerID, string fname = "")
+        {
+            JsonResult result = new JsonResult();
+            var userName = "John";
+            return result;
+        }
     }
 }

@@ -1,0 +1,27 @@
+﻿
+@{
+    ViewBag.Title = "ButtonCPN";
+}
+<button class="openbtn btn" onclick="toggleLayer()" id="openbtn">
+    <i class="fa-solid fa-layer-group" id="layer"></i>
+</button>
+<button class="openbtn btn" onclick="toggleSearch()" id="openbtn">
+    <i class="fa-solid fa-magnifying-glass" id="search"></i>
+</button>
+
+<script>
+    var flag = false;
+
+    function openNav() {
+        $("#mySidebarSearch").addClass("activeSidebar")
+        $("#main").addClass("activeMain")
+
+        flag = true;
+    }
+
+    function closeNav() {
+        $("#mySidebarSearch").removeClass("activeSidebar")
+        $("#main").removeClass("activeMain")
+        flag = false;
+    }
+</script>

@@ -1,65 +1,79 @@
-﻿@{
+﻿@model testMVC.Models.MapModel
+@{
     ViewBag.Title = "Home Page";
 }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <div id="containerMap">
-    @*<div id="mySidebarLayer" class="sidebar">
-            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-            <a href="#">About</a>
-            <a href="#">Services</a>
-            <a href="#">Clients</a>
-            <a href="#">Contact</a>
-        </div>*@
     <div id="mySidebarSearch" class="sidebar">
-        <div class="heading">
+        <div class="panel-header">
             <h5>Thông tin tìm kiếm</h5>
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
         </div>
-        <div class="body">
-            <div>
-                <i class="fa-solid fa-magnifying-glass"></i>
-                Tra cứu thửa đất
+        <div class="panel-body">
+            <div class="tab-section">
+                <div class="tab-title activeTabTitle" id="tabTitleSearch" onclick="openSearchTab()">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    Tra cứu thửa đất
+                </div>
+                <div class="tab-title" id="tabTitleResult" onclick="openResultTab()">
+                    <i class="fa-solid fa-square-poll-horizontal"></i>
+                    Kết quả
+                </div>
             </div>
-            <form class="searchForm" id="searchForm">
-                <div class="form-group">
-                    <input type="text" class="form-control" />
+            <div>
+                <div class="tabSearch activeTabContent">
+                    @Html.Partial("SearchForm")
                 </div>
-                <div class="form-group">
-
-                <input type="text" class="form-control" />
+                <div class="tabResult">
+                    <div class="resultContent">
+                        <ul>
+                            <li class="items"></li>
+                            <li class="items"></li>
+                            <li class="items"></li>
+                            <li class="items"></li>
+                            <li class="items"></li>
+                            <li class="items"></li>
+                        </ul>
+                    </div>
+                    @*                    @{Html.RenderAction("Result");}*@
                 </div>
-
-                <div class="form-group">
-
-                <select title="Phường/Xã">
-                    <option value="tanphu">Tân Phú</option>
-                </select>
-                </div>
-                <div class="form-group">
-                <select title="Quận/Huyện">
-                    <option value="tanphu">Tân Phú</option>
-                </select>
-
-                </div>
-                <div>
-                    <button class="btn btn-primary">Search</button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
-
     <div id="main">
-        <button class="openbtn btn" onclick="toggleLayer()" id="openbtn">
-            <i class="fa-solid fa-layer-group" id="layer"></i>
-        </button>
-        <button class="openbtn btn" onclick="toggleSearch()" id="openbtn">
-            <i class="fa-solid fa-magnifying-glass" id="search"></i>
-        </button>
+        @Html.Partial("ButtonCPN")
     </div>
 </div>
 
 <script>
-    var initialize = function () {
+
+
+    var flagTab = false;
+    const toggleSearch = () => {
+        flag = !flag;
+        flag ? openNav() : closeNav();
+    }
+
+    const openSearchTab = () => {
+        $("#tabTitleSearch").addClass("activeTabTitle");
+        $("#tabTitleResult").removeClass("activeTabTitle");
+        $(".tabSearch").addClass("activeTabContent");
+        $(".tabResult").removeClass("activeTabContent");
+    }
+
+    const openResultTab = () => {
+        $("#tabTitleSearch").removeClass("activeTabTitle");
+        $("#tabTitleResult").addClass("activeTabTitle");
+        $(".tabSearch").removeClass("activeTabContent");
+        $(".tabResult").addClass("activeTabContent");
+    }
+
+
+
+    $(document).ready(function () {
+
+
         var mapContainer = document.getElementById("containerMap");
         var mapProp = {
             center: new vbd.LatLng(14.102783, 109.649506),
@@ -67,32 +81,49 @@
             minZoom: 2,
 
         };
+        var mapGl = new vbd.Map(mapContainer, mapProp);
 
-        var map = new vbd.Map(mapContainer, mapProp);
-    };
-
-    vbd.event.addDomListener(window, 'load', initialize);
-</script>
-<script>
-
-    var flag = false;
-
-    const toggleSearch = () => {
-        flag = !flag;
-        flag ? openNav() : closeNav();
-    }
-
-    function openNav() {
-        $("#mySidebarSearch").addClass("activeSidebar")
-        $("#main").addClass("activeMain")
-
-        flag = true;
-    }
-
-    function closeNav() {
-        $("#mySidebarSearch").removeClass("activeSidebar")
-        $("#main").removeClass("activeMain")
-        flag = false;
-    }
-
+        $('#btnSearch').on('click', (e) => {
+            e.preventDefault();
+            var map = new Object()
+            map.Province = $('#province').val();
+            map.Ward = $('#ward').val();
+            map.soThuTuThua = parseInt($('#soThuTuThua').val());
+            map.soHieuToBanDo = parseInt($('#soHieuToBanDo').val());
+            if (map != null) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/AjaxPostCall",
+                    data: JSON.stringify(map),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response != null) {
+                            //var polygon = new vbd.Polygon({ paths: [[106.257124560784, 9.698294686187], [106.257145796504, 9.69829608588], [106.257144226527, 9.698164990785], [106.257335166298, 9.698177859603], [106.257334933308, 9.698155256919], [106.257195941108, 9.698144714483], [106.257198229434, 9.698108634719], [106.257334487622, 9.698119092784], [106.257332248036, 9.69793329943], [106.257354445343, 9.697713547278], [106.257180448209, 9.697738071923], [106.257124560784, 9.698294686187]], strokeOpacity: 0.5, strokeWidth: 2 });
+                            //polygon.setMap(mapGl);
+                            //mapGl.panTo([106.257124560784, 9.698294686187], [106.257145796504, 9.69829608588], [106.257144226527, 9.698164990785], [106.257335166298, 9.698177859603], [106.257334933308, 9.698155256919], [106.257195941108, 9.698144714483], [106.257198229434, 9.698108634719], [106.257334487622, 9.698119092784], [106.257332248036, 9.69793329943], [106.257354445343, 9.697713547278], [106.257180448209, 9.697738071923], [106.257124560784, 9.698294686187]);
+                            //var a = response.geo.slice(response.geo.indexOf("[") + 3, response.geo.length - 4).split("],[")
+                            openResultTab();
+                            const arr = [response, response]
+                            for (let i = 0; i < arr.length; i++) {
+                            }
+                        } else {
+                            alert("Something went wrong");
+                        }
+                    },
+                    failure: function (response) {
+                        console.log(response.statusText)
+                    },
+                    error: function (response) {
+                        console.log(response.statusText)
+                    }
+                });
+            }
+        })
+        document.querySelectorAll('.items')[0].innerHTML = "abc"
+        const a = [106.257124560784, 9.698294686187]
+        document.querySelectorAll('.items')[0].addEventListener('click', function () {
+            mapGl.panTo(a)
+        });
+    });
 </script>

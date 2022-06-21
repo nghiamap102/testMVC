@@ -102,11 +102,15 @@
                             //var polygon = new vbd.Polygon({ paths: [[106.257124560784, 9.698294686187], [106.257145796504, 9.69829608588], [106.257144226527, 9.698164990785], [106.257335166298, 9.698177859603], [106.257334933308, 9.698155256919], [106.257195941108, 9.698144714483], [106.257198229434, 9.698108634719], [106.257334487622, 9.698119092784], [106.257332248036, 9.69793329943], [106.257354445343, 9.697713547278], [106.257180448209, 9.697738071923], [106.257124560784, 9.698294686187]], strokeOpacity: 0.5, strokeWidth: 2 });
                             //polygon.setMap(mapGl);
                             //mapGl.panTo([106.257124560784, 9.698294686187], [106.257145796504, 9.69829608588], [106.257144226527, 9.698164990785], [106.257335166298, 9.698177859603], [106.257334933308, 9.698155256919], [106.257195941108, 9.698144714483], [106.257198229434, 9.698108634719], [106.257334487622, 9.698119092784], [106.257332248036, 9.69793329943], [106.257354445343, 9.697713547278], [106.257180448209, 9.697738071923], [106.257124560784, 9.698294686187]);
-                            //var a = response.geo.slice(response.geo.indexOf("[") + 3, response.geo.length - 4).split("],[")
+                            var a = response.geo.slice(response.geo.indexOf("[") + 3, response.geo.length - 4).split("],[")
+                            console.log(a[0].split(",")[0])
                             openResultTab();
-                            const arr = [response, response]
+                            //const arr = [response, response]
                             for (let i = 0; i < arr.length; i++) {
                             }
+                            document.querySelectorAll('.items')[0].addEventListener('click', function () {
+                                mapGl.panTo([106.257124560784, 9.698294686187])
+                            });
                         } else {
                             alert("Something went wrong");
                         }
@@ -121,9 +125,5 @@
             }
         })
         document.querySelectorAll('.items')[0].innerHTML = "abc"
-        const a = [106.257124560784, 9.698294686187]
-        document.querySelectorAll('.items')[0].addEventListener('click', function () {
-            mapGl.panTo(a)
-        });
     });
 </script>

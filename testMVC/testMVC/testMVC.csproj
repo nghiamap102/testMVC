@@ -171,6 +171,9 @@
     <Content Include="Views\Home\SearchForm.cshtml" />
     <Content Include="Views\Home\Result.cshtml" />
     <Content Include="Views\Home\ButtonCPN.cshtml" />
+    <Content Include="Views\Home\Tab.cshtml" />
+    <Content Include="Views\Home\DataTable.cshtml" />
+    <Content Include="Views\Home\test.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

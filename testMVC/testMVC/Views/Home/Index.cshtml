@@ -2,7 +2,6 @@
 @{
     ViewBag.Title = "Home Page";
 }
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <div id="containerMap">
     <div id="mySidebarSearch" class="sidebar">
@@ -11,119 +10,107 @@
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
         </div>
         <div class="panel-body">
-            <div class="tab-section">
-                <div class="tab-title activeTabTitle" id="tabTitleSearch" onclick="openSearchTab()">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    Tra cứu thửa đất
-                </div>
-                <div class="tab-title" id="tabTitleResult" onclick="openResultTab()">
-                    <i class="fa-solid fa-square-poll-horizontal"></i>
-                    Kết quả
-                </div>
+            @Html.Partial("Tab")
+            <div class="tabSearch activeTabContent">
+                @Html.Partial("SearchForm")
             </div>
-            <div>
-                <div class="tabSearch activeTabContent">
-                    @Html.Partial("SearchForm")
-                </div>
-                <div class="tabResult">
-                    <div class="resultContent">
-                        <ul>
-                            <li class="items"></li>
-                            <li class="items"></li>
-                            <li class="items"></li>
-                            <li class="items"></li>
-                            <li class="items"></li>
-                            <li class="items"></li>
-                        </ul>
-                    </div>
-                    @*                    @{Html.RenderAction("Result");}*@
-                </div>
-            </div>
+            @Html.Partial("Result")
         </div>
     </div>
     <div id="main">
         @Html.Partial("ButtonCPN")
     </div>
+
 </div>
+@section scripts{
+    <script>
 
-<script>
+        $(document).ready(function () {
+            var templateContent = function (arr, i, flag) {
+                let a = ""
+                if (flag) {
+                    a = "card"
+                }
+                return `<div class="` + a + `">
+                        <p>soThuTuThua:`+ arr[i].soThuTuThua + `</p>
+                        <p>soHieuToBanDo:`+ arr[i].soHieuToBanDo + `</p>
+                        <p>maXa:`+ arr[i].maXa + `</p>
+                        <p>trangThaiDangKy:`+ arr[i].trangThaiDangKy + `</p>
+                        <p>maLoaiDat:`+ arr[i].maLoaiDat + `</p>
+                        <p>dienTich:`+ arr[i].dienTich + `</p>
+                    </div>`
+            };
 
+            var mapContainer = document.getElementById("containerMap");
+            var mapProp = {
+                center: new vbd.LatLng(14.102783, 109.649506),
+                zoom: 8,
+                minZoom: 2,
+                zoomControl: true,
+                zoomControlOptions: { position: vbd.ControlPosition.TOP_RIGHT, offset: new vbd.Size(0, 0) },
+            };
+            var mapGl = new vbd.Map(mapContainer, mapProp);
 
-    var flagTab = false;
-    const toggleSearch = () => {
-        flag = !flag;
-        flag ? openNav() : closeNav();
-    }
+            $('#btnSearch').on('click', (e) => {
+                e.preventDefault();
+                var map = new Object()
+                map.Province = $('#province').val();
+                map.Ward = $('#ward').val();
+                map.soThuTuThua = parseInt($('#soThuTuThua').val());
+                map.soHieuToBanDo = parseInt($('#soHieuToBanDo').val());
 
-    const openSearchTab = () => {
-        $("#tabTitleSearch").addClass("activeTabTitle");
-        $("#tabTitleResult").removeClass("activeTabTitle");
-        $(".tabSearch").addClass("activeTabContent");
-        $(".tabResult").removeClass("activeTabContent");
-    }
+                if (map != null) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/AjaxPostCall",
+                        data: JSON.stringify(map),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            if (response != null) {
+                                const arr = [response, response, response, response, response]
 
-    const openResultTab = () => {
-        $("#tabTitleSearch").removeClass("activeTabTitle");
-        $("#tabTitleResult").addClass("activeTabTitle");
-        $(".tabSearch").removeClass("activeTabContent");
-        $(".tabResult").addClass("activeTabContent");
-    }
+                                for (let i = 0; i < arr.length; i++) {
+                                    const newArr = arr[i].geo.slice(response.geo.indexOf("[") + 3, response.geo.length - 4).split("],[").map(ele => {
+                                        return [parseFloat(ele.split(",")[0]), parseFloat(ele.split(",")[1])]
+                                    })
 
+                                    var polygon = new vbd.Polygon({ paths: [...newArr], strokeOpacity: 0.5, strokeWidth: 2 });
+                                    polygon.setMap(mapGl);
+                                    var marker = new vbd.Marker({
+                                        position: [polygon.getBounds().getCenter().Longitude, polygon.getBounds().getCenter().Latitude]
+                                    });
 
+                                    var infowindow = new vbd.InfoWindow({
+                                        content: templateContent(arr, i, false)
+                                    });
+                                    vbd.event.addListener(polygon, 'click', function () {
+                                        infowindow.open(mapGl, marker);
+                                    });
+                                    document.querySelectorAll('.items')[i].innerHTML = templateContent(arr, i, true)
+                                    document.querySelectorAll('.items')[i].addEventListener('click', function () {
+                                        mapGl.panTo(new vbd.LatLng(polygon.getBounds().getCenter().Latitude, polygon.getBounds().getCenter().Longitude))
+                                        mapGl.zoomFit()
+                                    });
+                                }
+                                openResultTab();
+                                $(".alertResult").hide()
 
-    $(document).ready(function () {
-
-
-        var mapContainer = document.getElementById("containerMap");
-        var mapProp = {
-            center: new vbd.LatLng(14.102783, 109.649506),
-            zoom: 5,
-            minZoom: 2,
-
-        };
-        var mapGl = new vbd.Map(mapContainer, mapProp);
-
-        $('#btnSearch').on('click', (e) => {
-            e.preventDefault();
-            var map = new Object()
-            map.Province = $('#province').val();
-            map.Ward = $('#ward').val();
-            map.soThuTuThua = parseInt($('#soThuTuThua').val());
-            map.soHieuToBanDo = parseInt($('#soHieuToBanDo').val());
-            if (map != null) {
-                $.ajax({
-                    type: "POST",
-                    url: "/Home/AjaxPostCall",
-                    data: JSON.stringify(map),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (response) {
-                        if (response != null) {
-                            //var polygon = new vbd.Polygon({ paths: [[106.257124560784, 9.698294686187], [106.257145796504, 9.69829608588], [106.257144226527, 9.698164990785], [106.257335166298, 9.698177859603], [106.257334933308, 9.698155256919], [106.257195941108, 9.698144714483], [106.257198229434, 9.698108634719], [106.257334487622, 9.698119092784], [106.257332248036, 9.69793329943], [106.257354445343, 9.697713547278], [106.257180448209, 9.697738071923], [106.257124560784, 9.698294686187]], strokeOpacity: 0.5, strokeWidth: 2 });
-                            //polygon.setMap(mapGl);
-                            //mapGl.panTo([106.257124560784, 9.698294686187], [106.257145796504, 9.69829608588], [106.257144226527, 9.698164990785], [106.257335166298, 9.698177859603], [106.257334933308, 9.698155256919], [106.257195941108, 9.698144714483], [106.257198229434, 9.698108634719], [106.257334487622, 9.698119092784], [106.257332248036, 9.69793329943], [106.257354445343, 9.697713547278], [106.257180448209, 9.697738071923], [106.257124560784, 9.698294686187]);
-                            var a = response.geo.slice(response.geo.indexOf("[") + 3, response.geo.length - 4).split("],[")
-                            console.log(a[0].split(",")[0])
-                            openResultTab();
-                            //const arr = [response, response]
-                            for (let i = 0; i < arr.length; i++) {
+                            } else {
+                                $('.alert').text = "invalid"
                             }
-                            document.querySelectorAll('.items')[0].addEventListener('click', function () {
-                                mapGl.panTo([106.257124560784, 9.698294686187])
-                            });
-                        } else {
-                            alert("Something went wrong");
+                        },
+                        failure: function (response) {
+                            console.log(response.statusText)
+                        },
+                        error: function (response) {
+                            console.log(response.statusText)
                         }
-                    },
-                    failure: function (response) {
-                        console.log(response.statusText)
-                    },
-                    error: function (response) {
-                        console.log(response.statusText)
-                    }
-                });
-            }
-        })
-        document.querySelectorAll('.items')[0].innerHTML = "abc"
-    });
-</script>
+                    });
+                }
+            })
+        });
+
+    </script>
+}
+

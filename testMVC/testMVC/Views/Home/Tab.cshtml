@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewBag.Title = "Tab";
+}
+
+
+<div class="tab-section">
+    <div class="tab-title activeTabTitle" id="tabTitleSearch" onclick="openSearchTab()">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        Tra cứu thửa đất
+    </div>
+    <div class="tab-title" id="tabTitleResult" onclick="openResultTab()">
+        <i class="fa-solid fa-square-poll-horizontal"></i>
+        Kết quả
+    </div>
+</div>
+<script>
+    const openSearchTab = () => {
+        $("#tabTitleSearch").addClass("activeTabTitle");
+        $("#tabTitleResult").removeClass("activeTabTitle");
+        $(".tabSearch").addClass("activeTabContent");
+        $(".tabResult").removeClass("activeTabContent");
+    }
+
+    const openResultTab = () => {
+        $("#tabTitleSearch").removeClass("activeTabTitle");
+        $("#tabTitleResult").addClass("activeTabTitle");
+        $(".tabSearch").removeClass("activeTabContent");
+        $(".tabResult").addClass("activeTabContent");
+    }
+</script>
+
+

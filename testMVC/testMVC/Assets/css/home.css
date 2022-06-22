@@ -185,6 +185,10 @@ body {
         display: block;
     }
 
+    .panel-body .tabResult {
+        overflow: scroll;
+    }
+
     .panel-body .tabResult, .panel-body .tabSearch {
         display: none;
     }
@@ -214,7 +218,17 @@ body {
     padding: 15px;
 }
 
-.items {
-    list-style: none;
-    cursor: pointer;
+.listItems {
+    padding: 0;
+    margin: 0;
 }
+
+    .listItems .items {
+        list-style: none;
+        cursor: pointer;
+    }
+
+        .listItems .items .card {
+            padding: 10px;
+            margin: 10px 0px;
+        }

@@ -24,4 +24,8 @@
         $("#main").removeClass("activeMain")
         flag = false;
     }
+    const toggleSearch = () => {
+        flag = !flag;
+        flag ? openNav() : closeNav();
+    }
 </script>
